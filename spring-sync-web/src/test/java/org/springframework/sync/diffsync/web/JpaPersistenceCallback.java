@@ -16,44 +16,45 @@
 package org.springframework.sync.diffsync.web;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.sync.diffsync.PersistenceCallback;
 
 class JpaPersistenceCallback<T> implements PersistenceCallback<T> {
-	
-	private final CrudRepository<T, Long> repo;
-	private Class<T> entityType;
 
-	public JpaPersistenceCallback(CrudRepository<T, Long> repo, Class<T> entityType) {
-		this.repo = repo;
-		this.entityType = entityType;
-	}
-	
-	@Override
-	public List<T> findAll() {
-		return (List<T>) repo.findAll();
-	}
-	
-	@Override
-	public T findOne(String id) {
-		return repo.findOne(Long.valueOf(id));
-	}
-	
-	@Override
-	public void persistChange(T itemToSave) {
-		repo.save(itemToSave);
-	}
-	
-	@Override
-	public void persistChanges(List<T> itemsToSave, List<T> itemsToDelete) {
-		repo.save(itemsToSave);
-		repo.delete(itemsToDelete);
-	}
+  private final CrudRepository<T, Long> repo;
+  private final Class<T> entityType;
 
-	@Override
-	public Class<T> getEntityType() {
-		return entityType;
-	}
-	
+  public JpaPersistenceCallback(CrudRepository<T, Long> repo, Class<T> entityType) {
+    this.repo = repo;
+    this.entityType = entityType;
+  }
+
+  @Override
+  public List<T> findAll() {
+    return (List<T>) repo.findAll();
+  }
+
+  @Override
+  public Optional<T> findOne(String id) {
+    return repo.findById(Long.valueOf(id));
+  }
+
+  @Override
+  public void persistChange(T itemToSave) {
+    repo.save(itemToSave);
+  }
+
+  @Override
+  public void persistChanges(List<T> itemsToSave, List<T> itemsToDelete) {
+    repo.saveAll(itemsToSave);
+    repo.deleteAll(itemsToDelete);
+  }
+
+  @Override
+  public Class<T> getEntityType() {
+    return entityType;
+  }
+
 }

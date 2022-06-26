@@ -15,37 +15,37 @@
  */
 package org.springframework.sync;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class InverseTest {
+class InverseTest {
 
-	@Test
-	public void inverseOnObjects() throws Exception {
-		Todo original = new Todo(123L, "A", false);
-		Todo modified = new Todo(124L, "B", true);
-		Patch patch = Diff.diff(original, modified);
-		Todo patched = patch.apply(original, Todo.class);
-		assertEquals(modified, patched);
-	}
-	
-	@Test
-	public void inverseOnLists() throws Exception {
-		List<Todo> original = new ArrayList<Todo>();
-		original.add(new Todo(1L, "A", false));
-		original.add(new Todo(2L, "B", false));
-		original.add(new Todo(3L, "C", false));
-		List<Todo> modified = new ArrayList<Todo>();
-		modified.add(new Todo(111L, "A", false));
-		modified.add(new Todo(2L, "BBB", false));
-		modified.add(new Todo(3L, "C", true));
-		Patch patch = Diff.diff(original, modified);
-		List<Todo> patched = patch.apply(original, Todo.class);
-		assertEquals(modified, patched);
-	}
-	
+  @Test
+  void inverseOnObjects() {
+    Todo original = new Todo(123L, "A", false);
+    Todo modified = new Todo(124L, "B", true);
+    Patch patch = Diff.diff(original, modified);
+    Todo patched = patch.apply(original, Todo.class);
+    assertEquals(modified, patched);
+  }
+
+  @Test
+  void inverseOnLists() {
+    List<Todo> original = new ArrayList<>();
+    original.add(new Todo(1L, "A", false));
+    original.add(new Todo(2L, "B", false));
+    original.add(new Todo(3L, "C", false));
+    List<Todo> modified = new ArrayList<>();
+    modified.add(new Todo(111L, "A", false));
+    modified.add(new Todo(2L, "BBB", false));
+    modified.add(new Todo(3L, "C", true));
+    Patch patch = Diff.diff(original, modified);
+    List<Todo> patched = patch.apply(original, Todo.class);
+    assertEquals(modified, patched);
+  }
+
 }

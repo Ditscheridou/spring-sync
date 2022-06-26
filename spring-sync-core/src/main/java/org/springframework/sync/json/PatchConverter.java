@@ -15,9 +15,9 @@
  */
 package org.springframework.sync.json;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.sync.Patch;
 
-import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * <p>A strategy interface for producing {@link Patch} instances from a patch document representation (such as JSON Patch) and 

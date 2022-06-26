@@ -1,0 +1,32 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
+plugins {
+  id 'org.springframework.boot' version '2.7.0' apply false
+  id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+  id 'java'
+  id 'idea'
+  id 'org.asciidoctor.jvm.convert' version '3.1.0'
+}
+
+description("Spring Sync Configuration")
+
+dependencyManagement {
+  imports {
+    mavenBom SpringBootPlugin.BOM_COORDINATES
+  }
+}
+
+
+repositories {
+  mavenCentral()
+  google()
+}
+
+dependencies {
+  implementation(project(":spring-sync-core"))
+  implementation(project(":spring-sync-web"))
+  implementation("org.springframework:spring-webmvc")
+  implementation("org.springframework:spring-core")
+  implementation("org.springframework:spring-context")
+  implementation("javax.servlet:javax.servlet-api")
+}

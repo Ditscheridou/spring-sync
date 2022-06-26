@@ -15,34 +15,34 @@
  */
 package org.springframework.sync;
 
-import static org.junit.Assert.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.expression.Expression;
 
-public class PathToSpelTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-	@Test
-	public void listIndex() {
-		Expression expr = PathToSpEL.pathToExpression("/1/description");
-		List<Todo> todos = new ArrayList<Todo>();
-		todos.add(new Todo(1L, "A", false));
-		todos.add(new Todo(2L, "B", false));
-		todos.add(new Todo(3L, "C", false));
-		assertEquals("B", (String) expr.getValue(todos));		
-	}
-	
-	@Test
-	public void listTilde() {
-		Expression expr = PathToSpEL.pathToExpression("/~/description");
-		List<Todo> todos = new ArrayList<Todo>();
-		todos.add(new Todo(1L, "A", false));
-		todos.add(new Todo(2L, "B", false));
-		todos.add(new Todo(3L, "C", false));
-		assertEquals("C", (String) expr.getValue(todos));
-	}
-	
+class PathToSpelTest {
+
+  @Test
+  void listIndex() {
+    Expression expr = PathToSpEL.pathToExpression("/1/description");
+    List<Todo> todos = new ArrayList<Todo>();
+    todos.add(new Todo(1L, "A", false));
+    todos.add(new Todo(2L, "B", false));
+    todos.add(new Todo(3L, "C", false));
+    assertEquals("B", (String) expr.getValue(todos));
+  }
+
+  @Test
+  void listTilde() {
+    Expression expr = PathToSpEL.pathToExpression("/~/description");
+    List<Todo> todos = new ArrayList<Todo>();
+    todos.add(new Todo(1L, "A", false));
+    todos.add(new Todo(2L, "B", false));
+    todos.add(new Todo(3L, "C", false));
+    assertEquals("C", (String) expr.getValue(todos));
+  }
+
 }

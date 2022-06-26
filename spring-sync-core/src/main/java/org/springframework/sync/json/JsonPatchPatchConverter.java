@@ -19,16 +19,16 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.springframework.sync.AddOperation;
-import org.springframework.sync.CopyOperation;
-import org.springframework.sync.FromOperation;
-import org.springframework.sync.MoveOperation;
+import org.springframework.sync.operations.AddOperation;
+import org.springframework.sync.operations.CopyOperation;
+import org.springframework.sync.operations.FromOperation;
+import org.springframework.sync.operations.MoveOperation;
 import org.springframework.sync.Patch;
 import org.springframework.sync.PatchException;
-import org.springframework.sync.PatchOperation;
-import org.springframework.sync.RemoveOperation;
-import org.springframework.sync.ReplaceOperation;
-import org.springframework.sync.TestOperation;
+import org.springframework.sync.operations.PatchOperation;
+import org.springframework.sync.operations.RemoveOperation;
+import org.springframework.sync.operations.ReplaceOperation;
+import org.springframework.sync.operations.TestOperation;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -55,7 +55,7 @@ public class JsonPatchPatchConverter implements PatchConverter<JsonNode> {
 		}
 		
 		ArrayNode opNodes = (ArrayNode) jsonNode;
-		List<PatchOperation> ops = new ArrayList<PatchOperation>(opNodes.size());
+		List<PatchOperation> ops = new ArrayList<>(opNodes.size());
 		for(Iterator<JsonNode> elements = opNodes.elements(); elements.hasNext(); ) {
 			JsonNode opNode = elements.next();
 			
@@ -66,19 +66,26 @@ public class JsonPatchPatchConverter implements PatchConverter<JsonNode> {
 			Object value = valueFromJsonNode(path, valueNode);			
 			String from = opNode.has("from") ? opNode.get("from").textValue() : null;
 
-			if (opType.equals("test")) {
+			switch (opType) {
+			case "test":
 				ops.add(new TestOperation(path, value));
-			} else if (opType.equals("replace")) {
+				break;
+			case "replace":
 				ops.add(new ReplaceOperation(path, value));
-			} else if (opType.equals("remove")) {
+				break;
+			case "remove":
 				ops.add(new RemoveOperation(path));
-			} else if (opType.equals("add")) {
+				break;
+			case "add":
 				ops.add(new AddOperation(path, value));
-			} else if (opType.equals("copy")) {
+				break;
+			case "copy":
 				ops.add(new CopyOperation(path, from));
-			} else if (opType.equals("move")) {
+				break;
+			case "move":
 				ops.add(new MoveOperation(path, from));
-			} else {
+				break;
+			default:
 				throw new PatchException("Unrecognized operation type: " + opType);
 			}
 		}

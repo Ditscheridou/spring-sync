@@ -15,42 +15,48 @@
  */
 package org.springframework.sync.util;
 
+import org.apache.commons.lang3.SerializationUtils;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.SerializationUtils;
-
 /**
  * Utility methods for deep cloning an object graph.
+ *
  * @author Craig Walls
  */
 public class DeepCloneUtils {
 
-	/**
-	 * Deep clones an object.
-	 * @param original a single, non-list object to be cloned
-	 * @param <T> the object's type
-	 * @return the cloned object
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T> T deepClone(T original) {
-		return (T) SerializationUtils.clone((Serializable) original);
-	}
-	
-	/**
-	 * Deep clones a list.
-	 * @param original a list to be cloned
-	 * @param <T> the list's generic type
-	 * @return the cloned list
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T> List<T> deepClone(List<T> original) {
-		List<T> copy = new ArrayList<T>(original.size());
-		for(T t : original) {
-			copy.add((T) SerializationUtils.clone((Serializable) t)); 
-		}
-		return copy;
-	}
-	
+  private DeepCloneUtils() {
+  }
+
+  /**
+   * Deep clones an object.
+   *
+   * @param original a single, non-list object to be cloned
+   * @param <T>      the object's type
+   * @return the cloned object
+   */
+  @SuppressWarnings("unchecked")
+  public static <T> T deepClone(T original) {
+    return (T) SerializationUtils.clone((Serializable) original);
+  }
+
+  /**
+   * Deep clones a list.
+   *
+   * @param original a list to be cloned
+   * @param <T>      the list's generic type
+   * @return the cloned list
+   */
+  @SuppressWarnings("unchecked")
+  public static <T> List<T> deepClone(List<T> original) {
+    List<T> copy = new ArrayList<>(original.size());
+    for (T t : original) {
+      copy.add((T) SerializationUtils.clone((Serializable) t));
+    }
+    return copy;
+  }
+
 }

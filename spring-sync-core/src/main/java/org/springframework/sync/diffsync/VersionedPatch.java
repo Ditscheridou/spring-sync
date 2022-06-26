@@ -3,7 +3,7 @@ package org.springframework.sync.diffsync;
 import java.util.List;
 
 import org.springframework.sync.Patch;
-import org.springframework.sync.PatchOperation;
+import org.springframework.sync.operations.PatchOperation;
 
 public class VersionedPatch extends Patch {
 

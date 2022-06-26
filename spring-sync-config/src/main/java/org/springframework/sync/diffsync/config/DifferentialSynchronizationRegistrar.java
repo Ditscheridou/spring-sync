@@ -15,11 +15,6 @@
  */
 package org.springframework.sync.diffsync.config;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,20 +28,24 @@ import org.springframework.sync.diffsync.shadowstore.MapBasedShadowStore;
 import org.springframework.sync.diffsync.web.DiffSyncController;
 import org.springframework.util.Assert;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Configuration adapter for Differential Synchronization in Spring.
  * @author Craig Walls
  */
 @Configuration
-public class DifferentialSynchronizationRegistrar extends WebMvcConfigurerAdapter {
+public class DifferentialSynchronizationRegistrar implements WebMvcConfigurer {
 
 	private List<DiffSyncConfigurer> diffSyncConfigurers;
 
 	@Override
 	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-		List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
+		List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
 		messageConverters.add(new MappingJackson2HttpMessageConverter());
 	}
 

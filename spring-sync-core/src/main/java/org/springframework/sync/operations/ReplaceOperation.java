@@ -13,30 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.sync;
+package org.springframework.sync.operations;
 
 /**
- * Abstract base class for operations requiring a source property, such as "copy" and "move".
- * (e.g., copy <i>from</i> here to there.
+ * Operation that replaces the value at the given path with a new value.
+ * 
  * @author Craig Walls
  */
-public abstract class FromOperation extends PatchOperation {
+public class ReplaceOperation extends PatchOperation {
 
-	protected String from;
-	
 	/**
-	 * Constructs the operation
-	 * @param op The name of the operation to perform. (e.g., 'copy')
-	 * @param path The operation's target path. (e.g., '/foo/bar/4')
-	 * @param from The operation's source path. (e.g., '/foo/bar/5')
+	 * Constructs the replace operation
+	 * @param path The path whose value is to be replaced. (e.g., '/foo/bar/4')
+	 * @param value The value that will replace the current path value.
 	 */
-	public FromOperation(String op, String path, String from) {
-		super(op, path);
-		this.from = from;
+	public ReplaceOperation(String path, Object value) {
+		super("replace", path, value);
 	}
 	
-	public String getFrom() {
-		return from;
+	@Override
+  public <T> void perform(Object target, Class<T> type) {
+		setValueOnTarget(target, evaluateValueFromTarget(target, type));
 	}
-
+	
 }

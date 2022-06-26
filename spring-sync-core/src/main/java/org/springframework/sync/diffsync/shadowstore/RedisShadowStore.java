@@ -32,9 +32,9 @@ import org.springframework.sync.diffsync.ShadowStore;
  */
 public class RedisShadowStore extends AbstractShadowStore implements DisposableBean {
 
-	private RedisOperations<String, Shadow<?>> redisTemplate;
+	private final RedisOperations<String, Shadow<?>> redisTemplate;
 	
-	private List<String> keys = new ArrayList<String>();
+	private final List<String> keys = new ArrayList<>();
 
 	/**
 	 * Constructs a Redis-based {@link ShadowStore}.

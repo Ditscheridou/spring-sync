@@ -13,42 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.sync;
+package org.springframework.sync.operations;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.sync.operations.PatchOperation;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
+import org.springframework.sync.Todo;
 
-class PatchTest {
+class RemoveOperationTest {
 
   @Test
-  void replacePropertyOnEntityInListProperty() {
-
-    ArrayList<Todo> todos = new ArrayList<Todo>();
+  void removePropertyFromObject() {
+    // initial Todo list
+    List<Todo> todos = new ArrayList<>();
     todos.add(new Todo(1L, "A", false));
     todos.add(new Todo(2L, "B", false));
     todos.add(new Todo(3L, "C", false));
-    TodoList before = new TodoList();
-    before.setTodos(todos);
 
-    todos = new ArrayList<Todo>();
+    new RemoveOperation("/1/description").perform(todos, Todo.class);
+
+    assertNull(todos.get(1).getDescription());
+  }
+
+  @Test
+  void removeItemFromList() {
+    // initial Todo list
+    List<Todo> todos = new ArrayList<>();
     todos.add(new Todo(1L, "A", false));
     todos.add(new Todo(2L, "B", false));
     todos.add(new Todo(3L, "C", false));
-    todos.add(new Todo(4L, "D", false));
-    TodoList after = new TodoList();
-    after.setTodos(todos);
 
-    Patch diff = Diff.diff(before, after);
-    List<PatchOperation> operations = diff.getOperations();
-    assertEquals(1, diff.size());
-    assertEquals("add", operations.get(0).getOp());
-    assertEquals("/todos/3", operations.get(0).getPath());
-    assertEquals(new Todo(4L, "D", false), operations.get(0).getValue());
+    new RemoveOperation("/1").perform(todos, Todo.class);
+
+    assertEquals(2, todos.size());
+    assertEquals("A", todos.get(0).getDescription());
+    assertEquals("C", todos.get(1).getDescription());
   }
 
 }

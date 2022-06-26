@@ -30,7 +30,7 @@ import org.springframework.sync.diffsync.ShadowStore;
  */
 public class MapBasedShadowStore extends AbstractShadowStore {
 
-	private Map<String, Shadow<?>> store = new HashMap<String, Shadow<?>>();
+	private final Map<String, Shadow<?>> store = new HashMap<>();
 	
 	public MapBasedShadowStore(String remoteNodeId) {
 		super(remoteNodeId);

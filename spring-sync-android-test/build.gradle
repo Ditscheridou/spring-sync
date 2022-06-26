@@ -1,0 +1,21 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
+plugins {
+  id 'java'
+  id 'idea'
+  id 'org.asciidoctor.jvm.convert' version '3.1.0'
+}
+
+description("Spring Sync Configuration")
+
+dependencyManagement {
+  imports {
+    mavenBom SpringBootPlugin.BOM_COORDINATES
+  }
+}
+
+
+repositories {
+  mavenCentral()
+  google()
+}

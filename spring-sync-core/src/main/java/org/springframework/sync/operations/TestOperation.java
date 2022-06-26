@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.sync;
+package org.springframework.sync.operations;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import org.springframework.sync.PatchException;
 import org.springframework.util.ObjectUtils;
 
 /**
@@ -43,7 +44,7 @@ public class TestOperation extends PatchOperation {
 	}
 	
 	@Override
-	<T> void perform(Object target, Class<T> type) {
+  public <T> void perform(Object target, Class<T> type) {
 		Object expected = normalizeIfNumber(evaluateValueFromTarget(target, type));
 		Object actual = normalizeIfNumber(getValueFromTarget(target));		
 		if (!ObjectUtils.nullSafeEquals(expected, actual)) {

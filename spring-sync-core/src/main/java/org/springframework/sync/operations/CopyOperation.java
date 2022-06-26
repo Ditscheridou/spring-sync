@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.sync;
+package org.springframework.sync.operations;
+
+import org.springframework.sync.PatchException;
 
 import static org.springframework.sync.PathToSpEL.*;
 
 /**
  * <p>
  * Operation to copy a value from the given "from" path to the given "path".
- * Will throw a {@link PatchException} if either path is invalid or if the object at the from path 
+ * Will throw a {@link PatchException} if either path is invalid or if the object at the from path
  * is not assignable to the given path.
  * </p>
  * 
@@ -55,7 +57,7 @@ public class CopyOperation extends FromOperation {
 	}
 	
 	@Override
-	<T> void perform(Object target, Class<T> type) {
+  public <T> void perform(Object target, Class<T> type) {
 		addValue(target, pathToExpression(from).getValue(target));
 	}
 	

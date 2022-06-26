@@ -17,6 +17,7 @@ package org.springframework.sync;
 
 import java.util.List;
 
+import org.springframework.sync.operations.PatchOperation;
 import org.springframework.sync.util.DeepCloneUtils;
 
 /**

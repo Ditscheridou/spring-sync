@@ -13,29 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.sync;
+package org.springframework.sync.operations;
+
+import org.springframework.sync.PatchException;
 
 /**
- * Operation to add a new value to the given "path".
- * Will throw a {@link PatchException} if the path is invalid or if the given value 
- * is not assignable to the given path.
+ * Operation that removes the value at the given path.
+ * Will throw a {@link PatchException} if the given path isn't valid or if the path is non-nullable.
  * 
  * @author Craig Walls
  */
-public class AddOperation extends PatchOperation {
+public class RemoveOperation extends PatchOperation {
 
 	/**
-	 * Constructs the add operation
-	 * @param path The path where the value will be added. (e.g., '/foo/bar/4')
-	 * @param value The value to add.
+	 * Constructs the remove operation
+	 * @param path The path of the value to be removed. (e.g., '/foo/bar/4')
 	 */
-	public AddOperation(String path, Object value) {
-		super("add", path, value);
+	public RemoveOperation(String path) {
+		super("remove", path);
 	}
 	
 	@Override
-	<T> void perform(Object targetObject, Class<T> type) {
-		addValue(targetObject, evaluateValueFromTarget(targetObject, type));
+  public <T> void perform(Object target, Class<T> type) {
+		popValueAtPath(target, path);
 	}
-	
+
 }

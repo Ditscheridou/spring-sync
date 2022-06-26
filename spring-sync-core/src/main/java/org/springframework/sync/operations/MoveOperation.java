@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.sync;
+package org.springframework.sync.operations;
+
+import org.springframework.sync.PatchException;
 
 /**
  * <p>
@@ -43,7 +45,7 @@ public class MoveOperation extends FromOperation {
 	}
 	
 	@Override
-	<T> void perform(Object target, Class<T> type) {
+  public <T> void perform(Object target, Class<T> type) {
 		addValue(target, popValueAtPath(target, from));
 	}
 	
