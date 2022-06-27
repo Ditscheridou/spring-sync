@@ -2,27 +2,21 @@ package org.springframework.sync.diffsync;
 
 import java.util.List;
 
+import lombok.Getter;
 import org.springframework.sync.Patch;
 import org.springframework.sync.operations.PatchOperation;
 
+@Getter
 public class VersionedPatch extends Patch {
 
-	private long serverVersion;
-	
-	private long clientVersion;
-	
-	public VersionedPatch(List<PatchOperation> operations, long serverVersion, long clientVersion) {
-		super(operations);
-		this.serverVersion = serverVersion;
-		this.clientVersion = clientVersion;
-	}
+  private final long serverVersion;
 
-	public long getServerVersion() {
-		return serverVersion;
-	}
-	
-	public long getClientVersion() {
-		return clientVersion;
-	}
-	
+  private final long clientVersion;
+
+  public VersionedPatch(List<PatchOperation> operations, long serverVersion, long clientVersion) {
+    super(operations);
+    this.serverVersion = serverVersion;
+    this.clientVersion = clientVersion;
+  }
+
 }

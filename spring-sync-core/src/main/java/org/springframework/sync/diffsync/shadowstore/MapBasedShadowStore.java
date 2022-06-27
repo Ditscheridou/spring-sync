@@ -18,32 +18,29 @@ package org.springframework.sync.diffsync.shadowstore;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.sync.diffsync.AbstractShadowStore;
-import org.springframework.sync.diffsync.Shadow;
-import org.springframework.sync.diffsync.ShadowStore;
-
 /**
  * Implementation of {@link ShadowStore} that keeps shadows in an in-memory map.
  * Not recommended for production applications, as it isn't scalable in terms of the number of clients.
- * Consider RedisShadowStore or GemfireShadowStore instead.
+ * Consider RedisShadowStore instead.
+ *
  * @author Craig Walls
  */
 public class MapBasedShadowStore extends AbstractShadowStore {
 
-	private final Map<String, Shadow<?>> store = new HashMap<>();
-	
-	public MapBasedShadowStore(String remoteNodeId) {
-		super(remoteNodeId);
-	}
-	
-	@Override
-	public void putShadow(String key, Shadow<?> shadow) {
-		store.put(getNodeSpecificKey(key), shadow);
-	}
+  private final Map<String, Shadow<?>> store = new HashMap<>();
 
-	@Override
-	public Shadow<?> getShadow(String key) {
-		return store.get(getNodeSpecificKey(key));
-	}
+  public MapBasedShadowStore(String remoteNodeId) {
+    super(remoteNodeId);
+  }
+
+  @Override
+  public void putShadow(String key, Shadow<?> shadow) {
+    store.put(getNodeSpecificKey(key), shadow);
+  }
+
+  @Override
+  public Shadow<?> getShadow(String key) {
+    return store.get(getNodeSpecificKey(key));
+  }
 
 }

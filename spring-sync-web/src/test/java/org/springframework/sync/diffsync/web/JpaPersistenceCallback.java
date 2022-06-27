@@ -16,20 +16,16 @@
 package org.springframework.sync.diffsync.web;
 
 import java.util.List;
-import java.util.Optional;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.sync.diffsync.PersistenceCallback;
 
+@RequiredArgsConstructor
 class JpaPersistenceCallback<T> implements PersistenceCallback<T> {
 
   private final CrudRepository<T, Long> repo;
   private final Class<T> entityType;
-
-  public JpaPersistenceCallback(CrudRepository<T, Long> repo, Class<T> entityType) {
-    this.repo = repo;
-    this.entityType = entityType;
-  }
 
   @Override
   public List<T> findAll() {
@@ -37,8 +33,8 @@ class JpaPersistenceCallback<T> implements PersistenceCallback<T> {
   }
 
   @Override
-  public Optional<T> findOne(String id) {
-    return repo.findById(Long.valueOf(id));
+  public T findOne(String id) {
+    return repo.findById(Long.valueOf(id)).orElse(null);
   }
 
   @Override

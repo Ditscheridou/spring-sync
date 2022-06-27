@@ -13,28 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.sync.diffsync;
+package org.springframework.sync.diffsync.shadowstore;
 
 public abstract class AbstractShadowStore implements ShadowStore {
 
-	private String nodeId;
+  private final String nodeId;
 
-	/**
-	 * Shadow store constructor
-	 * @param remoteNodeId the unique id of the node that this shadow store is being created for.
-	 */
-	public AbstractShadowStore(String remoteNodeId) {
-		this.nodeId = remoteNodeId;
-	}
-	
-	/**
-	 * Produces a node-specific key by prefixing the key with the remote node ID.
-	 * @param key the resource key
-	 * @return a node-specific key
-	 */
-	protected String getNodeSpecificKey(String key) {
-		return nodeId + ":" + key;
-	}
+  /**
+   * Shadow store constructor
+   *
+   * @param remoteNodeId the unique id of the node that this shadow store is being created for.
+   */
+  protected AbstractShadowStore(String remoteNodeId) {
+    this.nodeId = remoteNodeId;
+  }
 
-	
+  /**
+   * Produces a node-specific key by prefixing the key with the remote node ID.
+   *
+   * @param key the resource key
+   * @return a node-specific key
+   */
+  protected String getNodeSpecificKey(String key) {
+    return nodeId + ":" + key;
+  }
+
 }

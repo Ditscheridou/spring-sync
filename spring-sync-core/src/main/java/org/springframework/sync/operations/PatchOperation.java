@@ -45,7 +45,7 @@ public abstract class PatchOperation {
    * @param op   the operation name. (e.g., 'move')
    * @param path the path to perform the operation on. (e.g., '/1/description')
    */
-  public PatchOperation(String op, String path) {
+  protected PatchOperation(String op, String path) {
     this(op, path, null);
   }
 
@@ -56,7 +56,7 @@ public abstract class PatchOperation {
    * @param path  the path to perform the operation on. (e.g., '/1/description')
    * @param value the value to apply in the operation. Could be an actual value or an implementation of {@link LateObjectEvaluator}.
    */
-  public PatchOperation(String op, String path, Object value) {
+  protected PatchOperation(String op, String path, Object value) {
     this.op = op;
     this.path = path;
     this.value = value;
@@ -105,7 +105,10 @@ public abstract class PatchOperation {
     } else {
       Expression parentExpression = pathToParentExpression(removePath);
       List<?> list = (List<?>) parentExpression.getValue(target);
-      list.remove(listIndex >= 0 ? listIndex.intValue() : list.size() - 1);
+      if (list == null) {
+        throw new PatchException(String.format("parent expression for target %s was not present", target));
+      }
+      list.remove(listIndex >= 0 ? listIndex : list.size() - 1);
       return value;
     }
   }

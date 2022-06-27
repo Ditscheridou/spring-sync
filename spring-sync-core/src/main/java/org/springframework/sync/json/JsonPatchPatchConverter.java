@@ -38,112 +38,112 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * Convert {@link JsonNode}s containing JSON Patch to/from {@link Patch} objects.
+ *
  * @author Craig Walls
  */
 public class JsonPatchPatchConverter implements PatchConverter<JsonNode> {
 
-	private static final ObjectMapper MAPPER = new ObjectMapper();
+  private static final ObjectMapper MAPPER = new ObjectMapper();
 
-	/**
-	 * Constructs a {@link Patch} object given a JsonNode.
-	 * @param jsonNode a JsonNode containing the JSON Patch
-	 * @return a {@link Patch}
-	 */
-	public Patch convert(JsonNode jsonNode) {
-		if (!(jsonNode instanceof ArrayNode)) {
-			throw new IllegalArgumentException("JsonNode must be an instance of ArrayNode");
-		}
-		
-		ArrayNode opNodes = (ArrayNode) jsonNode;
-		List<PatchOperation> ops = new ArrayList<>(opNodes.size());
-		for(Iterator<JsonNode> elements = opNodes.elements(); elements.hasNext(); ) {
-			JsonNode opNode = elements.next();
-			
-			String opType = opNode.get("op").textValue();
-			String path = opNode.get("path").textValue();
-			
-			JsonNode valueNode = opNode.get("value");
-			Object value = valueFromJsonNode(path, valueNode);			
-			String from = opNode.has("from") ? opNode.get("from").textValue() : null;
+  /**
+   * Constructs a {@link Patch} object given a JsonNode.
+   *
+   * @param jsonNode a JsonNode containing the JSON Patch
+   * @return a {@link Patch}
+   */
+  public Patch convert(JsonNode jsonNode) {
+    if (!(jsonNode instanceof ArrayNode)) {
+      throw new IllegalArgumentException("JsonNode must be an instance of ArrayNode");
+    }
 
-			switch (opType) {
-			case "test":
-				ops.add(new TestOperation(path, value));
-				break;
-			case "replace":
-				ops.add(new ReplaceOperation(path, value));
-				break;
-			case "remove":
-				ops.add(new RemoveOperation(path));
-				break;
-			case "add":
-				ops.add(new AddOperation(path, value));
-				break;
-			case "copy":
-				ops.add(new CopyOperation(path, from));
-				break;
-			case "move":
-				ops.add(new MoveOperation(path, from));
-				break;
-			default:
-				throw new PatchException("Unrecognized operation type: " + opType);
-			}
-		}
-		
-		return new Patch(ops);
-	}
-	
-	/**
-	 * Renders a {@link Patch} as a {@link JsonNode}.
-	 * @param patch the patch
-	 * @return a {@link JsonNode} containing JSON Patch.
-	 */
-	public JsonNode convert(Patch patch) {
-		
-		List<PatchOperation> operations = patch.getOperations();
-		JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
-		ArrayNode patchNode = nodeFactory.arrayNode();
-		for (PatchOperation operation : operations) {
-			ObjectNode opNode = nodeFactory.objectNode();
-			opNode.set("op", nodeFactory.textNode(operation.getOp()));
-			opNode.set("path", nodeFactory.textNode(operation.getPath()));
-			if (operation instanceof FromOperation) {
-				FromOperation fromOp = (FromOperation) operation;
-				opNode.set("from", nodeFactory.textNode(fromOp.getFrom()));
-			}
-			Object value = operation.getValue();
-			if (value != null) {
-				opNode.set("value", MAPPER.valueToTree(value));
-			}
-			patchNode.add(opNode);
-		}
-		
-		return patchNode;
-	}
+    ArrayNode opNodes = (ArrayNode) jsonNode;
+    List<PatchOperation> ops = new ArrayList<>(opNodes.size());
+    for (Iterator<JsonNode> elements = opNodes.elements(); elements.hasNext(); ) {
+      JsonNode opNode = elements.next();
 
-	private Object valueFromJsonNode(String path, JsonNode valueNode) {
-		if (valueNode == null || valueNode.isNull()) {
-			return null;
-		} else if (valueNode.isTextual()) {
-			return valueNode.asText();
-		} else if (valueNode.isFloatingPointNumber()) {
-			return valueNode.asDouble();
-		} else if (valueNode.isBoolean()) {
-			return valueNode.asBoolean();
-		} else if (valueNode.isInt()) {
-			return valueNode.asInt();
-		} else if (valueNode.isLong()) {
-			return valueNode.asLong();
-		} else if (valueNode.isObject()) {
-			return new JsonLateObjectEvaluator(valueNode);
-		} else if (valueNode.isArray()) {
-			// TODO: Convert valueNode to array
-		}
-		
-		return null;
-	}
-	
-	
+      String opType = opNode.get("op").textValue();
+      String path = opNode.get("path").textValue();
 
-	
+      JsonNode valueNode = opNode.get("value");
+      Object value = valueFromJsonNode(path, valueNode);
+      String from = opNode.has("from") ? opNode.get("from").textValue() : null;
+
+      switch (opType) {
+      case "test":
+        ops.add(new TestOperation(path, value));
+        break;
+      case "replace":
+        ops.add(new ReplaceOperation(path, value));
+        break;
+      case "remove":
+        ops.add(new RemoveOperation(path));
+        break;
+      case "add":
+        ops.add(new AddOperation(path, value));
+        break;
+      case "copy":
+        ops.add(new CopyOperation(path, from));
+        break;
+      case "move":
+        ops.add(new MoveOperation(path, from));
+        break;
+      default:
+        throw new PatchException("Unrecognized operation type: " + opType);
+      }
+    }
+
+    return new Patch(ops);
+  }
+
+  /**
+   * Renders a {@link Patch} as a {@link JsonNode}.
+   *
+   * @param patch the patch
+   * @return a {@link JsonNode} containing JSON Patch.
+   */
+  public JsonNode convert(Patch patch) {
+
+    List<PatchOperation> operations = patch.getOperations();
+    JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
+    ArrayNode patchNode = nodeFactory.arrayNode();
+    for (PatchOperation operation : operations) {
+      ObjectNode opNode = nodeFactory.objectNode();
+      opNode.set("op", nodeFactory.textNode(operation.getOp()));
+      opNode.set("path", nodeFactory.textNode(operation.getPath()));
+      if (operation instanceof FromOperation) {
+        FromOperation fromOp = (FromOperation) operation;
+        opNode.set("from", nodeFactory.textNode(fromOp.getFrom()));
+      }
+      Object value = operation.getValue();
+      if (value != null) {
+        opNode.set("value", MAPPER.valueToTree(value));
+      }
+      patchNode.add(opNode);
+    }
+
+    return patchNode;
+  }
+
+  private Object valueFromJsonNode(String path, JsonNode valueNode) {
+    if (valueNode == null || valueNode.isNull()) {
+      return null;
+    } else if (valueNode.isTextual()) {
+      return valueNode.asText();
+    } else if (valueNode.isFloatingPointNumber()) {
+      return valueNode.asDouble();
+    } else if (valueNode.isBoolean()) {
+      return valueNode.asBoolean();
+    } else if (valueNode.isInt()) {
+      return valueNode.asInt();
+    } else if (valueNode.isLong()) {
+      return valueNode.asLong();
+    } else if (valueNode.isObject()) {
+      return new JsonLateObjectEvaluator(valueNode);
+    } else if (valueNode.isArray()) {
+      // TODO: Convert valueNode to array
+    }
+
+    return null;
+  }
+
 }

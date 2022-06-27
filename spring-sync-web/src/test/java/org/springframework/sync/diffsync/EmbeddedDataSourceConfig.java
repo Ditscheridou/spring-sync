@@ -41,7 +41,7 @@ public class EmbeddedDataSourceConfig {
 	public DataSource dataSource() {
 		return new EmbeddedDatabaseBuilder()
 			.setType(EmbeddedDatabaseType.H2)
-			.addScript("classpath:/org/springframework/sync/testdb.sql").build();
+			.addScript("classpath:/org/springframework/sync/schema.sql").build();
 	}
 
 	@Bean

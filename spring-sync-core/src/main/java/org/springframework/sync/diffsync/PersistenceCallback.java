@@ -16,7 +16,6 @@
 package org.springframework.sync.diffsync;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Callback to handle persistence in the course of applying a patch via Differential Synchronization.
@@ -39,7 +38,7 @@ public interface PersistenceCallback<T> {
 	 * @param id the id of the entity as a String. The implementation may convert it to the actual type.
 	 * @return the entity
 	 */
-	Optional<T> findOne(String id);
+	T findOne(String id);
 
 	/**
 	 * Save a single item.

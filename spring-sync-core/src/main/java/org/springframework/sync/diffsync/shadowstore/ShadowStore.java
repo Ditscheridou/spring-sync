@@ -13,18 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.sync.diffsync;
+package org.springframework.sync.diffsync.shadowstore;
 
 /**
- * Strategy interface that defines how an entity is persisted.
+ * Strategy interface for maintaining shadow copies across requests.
  * 
  * @author Craig Walls
- * @param <T> The entity type
  */
-public interface PersistenceStrategy<T> {
+public interface ShadowStore {
+	
+	/**
+	 * Stores a shadow copy.
+	 * @param key the key to store the shadow under
+	 * @param shadow the shadow copy
+	 */
+	void putShadow(String key, Shadow<?> shadow);
+	
+	/**
+	 * Retrieves a shadow copy.
+	 * @param key the key that the shadow is stored under
+	 * @return the shadow copy
+	 */
+	Shadow<?> getShadow(String key);
 
-	T save(T t);
-	
-	void delete(T t);
-	
 }

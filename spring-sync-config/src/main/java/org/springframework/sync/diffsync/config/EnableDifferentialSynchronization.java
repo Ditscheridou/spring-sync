@@ -26,13 +26,13 @@ import org.springframework.context.annotation.Import;
 
 /**
  * Enables Differential Synchronization.
+ *
  * @author Craig Walls
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@Import(DifferentialSynchronizationRegistrar.class)
+@Import(SpringSyncAutoConfiguration.class)
 public @interface EnableDifferentialSynchronization {
-
 }

@@ -15,10 +15,7 @@
  */
 package org.springframework.sync.diffsync.web;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
@@ -29,7 +26,8 @@ import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.sync.Patch;
 import org.springframework.sync.json.JsonPatchPatchConverter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.util.Collections;
 
 /**
  * {@link HttpMessageConverter} that converts "application/json-patch+json" payloads to/from {@link Patch} objects.

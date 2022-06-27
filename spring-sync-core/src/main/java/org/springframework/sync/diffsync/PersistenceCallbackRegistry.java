@@ -18,47 +18,50 @@ package org.springframework.sync.diffsync;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.NoArgsConstructor;
 import org.springframework.sync.Patch;
 
 /**
  * Registry for looking up {@link PersistenceCallback}s to be used in the course of applying a {@link Patch} via
  * Differential Synchronization.
- * 
+ *
  * @author Craig Walls
  */
+@NoArgsConstructor
 public class PersistenceCallbackRegistry {
 
-	private Map<String, PersistenceCallback<?>> persistenceCallbacks = new HashMap<String, PersistenceCallback<?>>();
-	
-	public PersistenceCallbackRegistry() {}
-	
-	/**
-	 * Adds a {@link PersistenceCallback} to the registry with a key that is pluralized by the pluralize() method.
-	 * @param persistenceCallback the {@link PersistenceCallback} to add to the registry.
-	 */
-	public void addPersistenceCallback(PersistenceCallback<?> persistenceCallback) {
-		Class<?> entityType = persistenceCallback.getEntityType();
-		String key = pluralize(entityType.getSimpleName());
-		persistenceCallbacks.put(key, persistenceCallback);
-	}
-	
-	/**
-	 * Looks up a {@link PersistenceCallback} from the registry.
-	 * @param key the key that the {@link PersistenceCallback} has been registered under.
-	 * @return the {@link PersistenceCallback}
-	 */
-	public PersistenceCallback<?> findPersistenceCallback(String key) {
-		return persistenceCallbacks.get(key);
-	}
-	
-	/**
-	 * Pluralizes an entity's type name. Default implementation is to naively add an 's' to the end of the given String.
-	 * Override to implement a more elegant pluralization technique.
-	 * @param entityTypeName the entity type name to be pluralized.
-	 * @return the pluralized type name.
-	 */
-	protected String pluralize(String entityTypeName) {
-		return entityTypeName.toLowerCase() + "s";
-	}
-	
+  private final Map<String, PersistenceCallback<?>> persistenceCallbacks = new HashMap<>();
+
+  /**
+   * Adds a {@link PersistenceCallback} to the registry with a key that is pluralized by the pluralize() method.
+   *
+   * @param persistenceCallback the {@link PersistenceCallback} to add to the registry.
+   */
+  public void addPersistenceCallback(PersistenceCallback<?> persistenceCallback) {
+    Class<?> entityType = persistenceCallback.getEntityType();
+    String key = pluralize(entityType.getSimpleName());
+    persistenceCallbacks.put(key, persistenceCallback);
+  }
+
+  /**
+   * Looks up a {@link PersistenceCallback} from the registry.
+   *
+   * @param key the key that the {@link PersistenceCallback} has been registered under.
+   * @return the {@link PersistenceCallback}
+   */
+  public PersistenceCallback<?> findPersistenceCallback(String key) {
+    return persistenceCallbacks.get(key);
+  }
+
+  /**
+   * Pluralizes an entity's type name. Default implementation is to naively add an 's' to the end of the given String.
+   * Override to implement a more elegant pluralization technique.
+   *
+   * @param entityTypeName the entity type name to be pluralized.
+   * @return the pluralized type name.
+   */
+  protected String pluralize(String entityTypeName) {
+    return entityTypeName.toLowerCase() + "s";
+  }
+
 }

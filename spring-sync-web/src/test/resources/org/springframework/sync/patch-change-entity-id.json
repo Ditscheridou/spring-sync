@@ -1,1 +1,12 @@
-[{"op":"test", "path":"/id", "value":2}, {"op":"replace", "path":"/id", "value":222}]
+[
+  {
+    "op": "test",
+    "path": "/id",
+    "value": 2
+  },
+  {
+    "op": "replace",
+    "path": "/id",
+    "value": 222
+  }
+]

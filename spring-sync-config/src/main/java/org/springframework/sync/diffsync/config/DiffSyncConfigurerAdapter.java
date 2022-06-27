@@ -16,7 +16,7 @@
 package org.springframework.sync.diffsync.config;
 
 import org.springframework.sync.diffsync.PersistenceCallbackRegistry;
-import org.springframework.sync.diffsync.ShadowStore;
+import org.springframework.sync.diffsync.shadowstore.ShadowStore;
 import org.springframework.sync.diffsync.shadowstore.MapBasedShadowStore;
 
 /**
@@ -28,7 +28,7 @@ public class DiffSyncConfigurerAdapter implements DiffSyncConfigurer {
 	@Override
 	public void addPersistenceCallbacks(PersistenceCallbackRegistry registry) {
 	}
-	
+
 	@Override
 	public ShadowStore getShadowStore(String remoteNodeId) {
 		return new MapBasedShadowStore(remoteNodeId);

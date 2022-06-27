@@ -21,9 +21,6 @@ import java.util.List;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.sync.diffsync.AbstractShadowStore;
-import org.springframework.sync.diffsync.Shadow;
-import org.springframework.sync.diffsync.ShadowStore;
 
 /**
  * {@link ShadowStore} implementation that stores shadows in Redis, via an injected {@link RedisTemplate}.

@@ -22,93 +22,95 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 
 /**
  * Utilities for converting patch paths to/from SpEL expressions.
- * 
+ * <p>
  * For example, "/foo/bars/1/baz" becomes "foo.bars[1].baz".
- * 
+ *
  * @author Craig Walls
  */
 public class PathToSpEL {
 
-	private static final SpelExpressionParser SPEL_EXPRESSION_PARSER = new SpelExpressionParser();
+  private static final SpelExpressionParser SPEL_EXPRESSION_PARSER = new SpelExpressionParser();
 
-	/**
-	 * Converts a patch path to an {@link Expression}.
-	 * @param path the patch path to convert.
-	 * @return an {@link Expression}
-	 */
-	public static Expression pathToExpression(String path) {
-		return SPEL_EXPRESSION_PARSER.parseExpression(pathToSpEL(path));
-	}
-	
-	/**
-	 * Convenience method to convert a SpEL String to an {@link Expression}.
-	 * @param spel the SpEL expression as a String
-	 * @return an {@link Expression}
-	 */
-	public static Expression spelToExpression(String spel) {
-		return SPEL_EXPRESSION_PARSER.parseExpression(spel);
-	}	
-	
-	/**
-	 * Produces an expression targeting the parent of the object that the given path targets. 
-	 * @param path the path to find a parent expression for.
-	 * @return an {@link Expression} targeting the parent of the object specifed by path.
-	 */
-	public static Expression pathToParentExpression(String path) {
-		return spelToExpression(pathNodesToSpEL(copyOf(path.split("\\/"), path.split("\\/").length - 1)));
-	}
+  /**
+   * Converts a patch path to an {@link Expression}.
+   *
+   * @param path the patch path to convert.
+   * @return an {@link Expression}
+   */
+  public static Expression pathToExpression(String path) {
+    return SPEL_EXPRESSION_PARSER.parseExpression(pathToSpEL(path));
+  }
 
-	// private helpers
-	
-	private static String pathToSpEL(String path) {
-		return pathNodesToSpEL(path.split("\\/"));
-	}
-	
-	private static String pathNodesToSpEL(String[] pathNodes) {
-		StringBuilder spelBuilder = new StringBuilder();
-		
-		for(int i=0; i < pathNodes.length; i++) {
-			String pathNode = pathNodes[i];
-			if (pathNode.length() == 0) {
-				continue;
-			}
-			
-			if ("~".equals(pathNode)) {
-				spelBuilder.append("[size() - 1]");
-				continue;
-			}
-			
-			try {
-				int index = Integer.parseInt(pathNode);
-				spelBuilder.append('[').append(index).append(']');
-			} catch (NumberFormatException e) {
-				if (spelBuilder.length() > 0) {
-					spelBuilder.append('.');	
-				}
-				spelBuilder.append(pathNode);
-			}
-		}
-		
-		String spel = spelBuilder.toString();
-		if (spel.length() == 0) {
-			spel = "#this";
-		}
-		return spel;		
-	}
+  /**
+   * Convenience method to convert a SpEL String to an {@link Expression}.
+   *
+   * @param spel the SpEL expression as a String
+   * @return an {@link Expression}
+   */
+  public static Expression spelToExpression(String spel) {
+    return SPEL_EXPRESSION_PARSER.parseExpression(spel);
+  }
 
-	@SuppressWarnings("unchecked")
-	private static <T> T[] copyOf(T[] original, int newLength) {
-		return (T[]) copyOf(original, newLength, original.getClass());
-	}
+  /**
+   * Produces an expression targeting the parent of the object that the given path targets.
+   *
+   * @param path the path to find a parent expression for.
+   * @return an {@link Expression} targeting the parent of the object specifed by path.
+   */
+  public static Expression pathToParentExpression(String path) {
+    return spelToExpression(pathNodesToSpEL(copyOf(path.split("/"), path.split("/").length - 1)));
+  }
 
-	// reproduces Arrays.copyOf because that API is missing on Android 2.2
-	private static <T, U> T[] copyOf(U[] original, int newLength,
-			Class<? extends T[]> newType) {
-		@SuppressWarnings("unchecked")
-		T[] copy = ((Object) newType == (Object) Object[].class) ? (T[]) new Object[newLength]
-				: (T[]) Array.newInstance(newType.getComponentType(), newLength);
-		System.arraycopy(original, 0, copy, 0, Math.min(original.length, newLength));
-		return copy;
-	}
+  // private helpers
+
+  private static String pathToSpEL(String path) {
+    return pathNodesToSpEL(path.split("/"));
+  }
+
+  private static String pathNodesToSpEL(String[] pathNodes) {
+    StringBuilder spelBuilder = new StringBuilder();
+
+    for (String pathNode : pathNodes) {
+      if (pathNode.length() == 0) {
+        continue;
+      }
+
+      if ("~".equals(pathNode)) {
+        spelBuilder.append("[size() - 1]");
+        continue;
+      }
+
+      try {
+        int index = Integer.parseInt(pathNode);
+        spelBuilder.append('[').append(index).append(']');
+      } catch (NumberFormatException e) {
+        if (spelBuilder.length() > 0) {
+          spelBuilder.append('.');
+        }
+        spelBuilder.append(pathNode);
+      }
+    }
+
+    String spel = spelBuilder.toString();
+    if (spel.length() == 0) {
+      spel = "#this";
+    }
+    return spel;
+  }
+
+  @SuppressWarnings("unchecked")
+  private static <T> T[] copyOf(T[] original, int newLength) {
+    return (T[]) copyOf(original, newLength, original.getClass());
+  }
+
+  // reproduces Arrays.copyOf because that API is missing on Android 2.2
+  private static <T, U> T[] copyOf(U[] original, int newLength,
+      Class<? extends T[]> newType) {
+    @SuppressWarnings("unchecked")
+    T[] copy = ((Object) newType == (Object) Object[].class) ? (T[]) new Object[newLength]
+        : (T[]) Array.newInstance(newType.getComponentType(), newLength);
+    System.arraycopy(original, 0, copy, 0, Math.min(original.length, newLength));
+    return copy;
+  }
 
 }

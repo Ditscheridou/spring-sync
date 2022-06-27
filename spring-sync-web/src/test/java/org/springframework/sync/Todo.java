@@ -16,79 +16,59 @@
 
 package org.springframework.sync;
 
-
-import org.apache.commons.lang3.builder.EqualsBuilder;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import java.io.Serializable;
+import org.hibernate.Hibernate;
+import org.springframework.data.domain.Persistable;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @author Roy Clarkson
  * @author Craig Walls
  */
 @Entity
-public class Todo implements Serializable {
+@Getter @Setter @ToString @AllArgsConstructor @NoArgsConstructor
+public class Todo implements Serializable, Persistable<Long> {
 
   private static final long serialVersionUID = 1L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Long id;
+  //  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Long id = -1L;
 
   private String description;
 
   private boolean complete;
 
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public Long getId() {
-    return id;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-  public boolean isComplete() {
-    return complete;
-  }
-
-  public void setComplete(boolean complete) {
-    this.complete = complete;
-  }
-
-  public Todo() {
-  }
-
-  public Todo(Long id, String description, boolean complete) {
-    this.id = id;
-    this.description = description;
-    this.complete = complete;
-  }
-
   @Override
-  public String toString() {
-    return "[ id=" + this.id + ", description=" + this.description + ", complete=" + this.complete + " ]";
-  }
-
-  @Override
-  public boolean equals(Object other) {
-    return EqualsBuilder.reflectionEquals(this, other);
+  public boolean equals(final Object o) {
+    if (this == o)
+      return true;
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
+      return false;
+    final Todo todo = (Todo) o;
+    return id != null && Objects.equals(id, todo.id);
   }
 
   @Override
   public int hashCode() {
     return HashCodeBuilder.reflectionHashCode(this);
+  }
+
+  @Override
+  public boolean isNew() {
+    return id == -1L;
   }
 }

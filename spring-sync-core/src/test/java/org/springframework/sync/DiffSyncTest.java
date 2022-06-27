@@ -13,28 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.sync.diffsync;
+package org.springframework.sync;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.sync.Patch;
-import org.springframework.sync.PatchException;
-import org.springframework.sync.Person;
-import org.springframework.sync.Todo;
-import org.springframework.sync.TodoRepository;
+import org.springframework.sync.diffsync.DiffSync;
+import org.springframework.sync.diffsync.VersionedPatch;
 import org.springframework.sync.diffsync.shadowstore.MapBasedShadowStore;
 import org.springframework.sync.json.JsonPatchPatchConverter;
 import org.springframework.sync.operations.AddOperation;
 import org.springframework.sync.operations.MoveOperation;
 import org.springframework.sync.operations.PatchOperation;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -49,21 +41,9 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ContextConfiguration(classes = EmbeddedDataSourceConfig.class)
-@Transactional
 class DiffSyncTest {
 
-  @Autowired
-  private TodoRepository repository;
-
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-
-  @AfterEach
-  void cleanup() {
-    repository.deleteAll();
-  }
 
   //
   // Apply patches - lists
@@ -385,7 +365,7 @@ class DiffSyncTest {
 
     Person person = new Person("Edmund", "Blackadder");
     Person patched = sync.apply(person, patch);
-    assertEquals("Blackadder", patched.getFirstName());
+    Assertions.assertEquals("Blackadder", patched.getFirstName());
     assertNull(patched.getLastName());
   }
 
@@ -432,7 +412,7 @@ class DiffSyncTest {
     assertEquals(0,
         diff.getServerVersion()); // the server created the patch against server version 0 (but it will be 1 after the patch is created)
 
-    assertEquals("Blackadder", patched.getFirstName());
+    Assertions.assertEquals("Blackadder", patched.getFirstName());
     assertNull(patched.getLastName());
   }
 
@@ -481,7 +461,7 @@ class DiffSyncTest {
     assertEquals(0,
         diff.getServerVersion()); // the server created the patch against server version 0 (but it will be 1 after the patch is created)
 
-    assertEquals("Blackadder", patched.getFirstName());
+    Assertions.assertEquals("Blackadder", patched.getFirstName());
     assertNull(patched.getLastName());
   }
 
@@ -597,7 +577,7 @@ class DiffSyncTest {
     VersionedPatch vPatch1 = new VersionedPatch(ops1, 0, 0);
     Person patched = sync.apply(person, vPatch1);
 
-    assertEquals("Blackadder", patched.getFirstName());
+    Assertions.assertEquals("Blackadder", patched.getFirstName());
     assertNull(patched.getLastName());
 
     VersionedPatch lostDiff = sync.diff(patched);
@@ -614,7 +594,7 @@ class DiffSyncTest {
     assertEquals(0, diff.getServerVersion());
 
     assertNull(patched.getFirstName());
-    assertEquals("Blackadder", patched.getLastName());
+    Assertions.assertEquals("Blackadder", patched.getLastName());
   }
 
   //

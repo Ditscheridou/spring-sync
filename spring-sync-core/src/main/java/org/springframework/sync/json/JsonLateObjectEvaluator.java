@@ -15,6 +15,9 @@
  */
 package org.springframework.sync.json;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.sync.LateObjectEvaluator;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -22,25 +25,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * {@link LateObjectEvaluator} implementation that assumes values represented as JSON objects.
+ *
  * @author Craig Walls
  */
+@RequiredArgsConstructor
 class JsonLateObjectEvaluator implements LateObjectEvaluator {
 
-	private static final ObjectMapper MAPPER = new ObjectMapper();
+  private static final ObjectMapper MAPPER = new ObjectMapper();
 
-	private JsonNode valueNode;
+  private final JsonNode valueNode;
 
-	public JsonLateObjectEvaluator(JsonNode valueNode) {
-		this.valueNode = valueNode;
-	}
-	
-	@Override
-	public <T> Object evaluate(Class<T> type) {
-		try {
-			return MAPPER.readValue(valueNode.traverse(), type);
-		} catch (Exception e) {
-			return null;
-		}
-	}
-
+  @Override
+  public <T> Object evaluate(Class<T> type) {
+    try {
+      return MAPPER.readValue(valueNode.traverse(), type);
+    } catch (Exception e) {
+      return null;
+    }
+  }
 }
