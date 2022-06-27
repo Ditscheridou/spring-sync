@@ -6,7 +6,6 @@ import org.springframework.sync.diffsync.Equivalency;
 import org.springframework.sync.diffsync.PersistenceCallback;
 import org.springframework.sync.diffsync.PersistenceCallbackRegistry;
 import org.springframework.sync.diffsync.shadowstore.ShadowStore;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
