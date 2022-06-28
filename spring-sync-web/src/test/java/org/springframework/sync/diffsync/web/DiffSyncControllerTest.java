@@ -22,14 +22,15 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
+import org.springframework.shadowstore.MapBasedShadowStore;
+import org.springframework.shadowstore.ShadowStore;
+import org.springframework.shadowstore.ShadowStoreFactory;
 import org.springframework.sync.DiffSyncService;
 import org.springframework.sync.Todo;
 import org.springframework.sync.TodoRepository;
 import org.springframework.sync.diffsync.EmbeddedDataSourceConfig;
 import org.springframework.sync.diffsync.IdPropertyEquivalency;
 import org.springframework.sync.diffsync.PersistenceCallbackRegistry;
-import org.springframework.sync.diffsync.shadowstore.MapBasedShadowStore;
-import org.springframework.sync.diffsync.shadowstore.ShadowStore;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -401,13 +402,13 @@ class DiffSyncControllerTest {
   }
 
   private MockMvc mockMvc() {
-    ShadowStore shadowStore = new MapBasedShadowStore("x");
 
     PersistenceCallbackRegistry callbackRegistry = new PersistenceCallbackRegistry();
     callbackRegistry.addPersistenceCallback(new JpaPersistenceCallback<>(repository, Todo.class));
 
     DiffSyncController controller = new DiffSyncController(
-        new DiffSyncService(shadowStore, new IdPropertyEquivalency(), callbackRegistry));
+        new DiffSyncService(new ShadowStoreFactory(MapBasedShadowStore.class), new IdPropertyEquivalency(),
+            callbackRegistry));
     return standaloneSetup(controller)
         .setMessageConverters(new JsonPatchHttpMessageConverter())
         .build();

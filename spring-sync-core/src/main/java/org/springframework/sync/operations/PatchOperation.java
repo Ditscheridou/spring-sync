@@ -19,8 +19,10 @@ import static org.springframework.sync.PathToSpEL.*;
 
 import java.util.List;
 
+import org.springframework.core.convert.ConversionException;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionException;
+import org.springframework.expression.spel.SpelEvaluationException;
 import org.springframework.sync.LateObjectEvaluator;
 import org.springframework.sync.PatchException;
 
@@ -99,7 +101,7 @@ public abstract class PatchOperation {
       try {
         expression.setValue(target, null);
         return value;
-      } catch (NullPointerException e) {
+      } catch (SpelEvaluationException e) {
         throw new PatchException("Path '" + removePath + "' is not nullable.");
       }
     } else {

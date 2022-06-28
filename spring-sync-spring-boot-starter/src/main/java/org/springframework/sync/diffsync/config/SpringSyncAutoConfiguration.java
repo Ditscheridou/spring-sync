@@ -1,26 +1,31 @@
 package org.springframework.sync.diffsync.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.sync.Diff;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.shadowstore.MapBasedShadowStore;
+import org.springframework.shadowstore.RedisShadowStore;
+import org.springframework.shadowstore.ShadowStore;
+import org.springframework.shadowstore.ShadowStoreFactory;
 import org.springframework.sync.DiffSyncService;
 import org.springframework.sync.IDiffSyncService;
 import org.springframework.sync.diffsync.DiffSync;
 import org.springframework.sync.diffsync.Equivalency;
 import org.springframework.sync.diffsync.IdPropertyEquivalency;
 import org.springframework.sync.diffsync.PersistenceCallbackRegistry;
-import org.springframework.sync.diffsync.shadowstore.MapBasedShadowStore;
-import org.springframework.sync.diffsync.shadowstore.ShadowStore;
 import org.springframework.util.Assert;
+import org.springframwork.sync.config.DiffSyncConfigurer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-@Configuration @ConditionalOnClass({ Diff.class, DiffSync.class }) public class SpringSyncAutoConfiguration {
+@Configuration
+@ConditionalOnClass({ DiffSyncService.class, DiffSync.class })
+public class SpringSyncAutoConfiguration {
 
   private List<DiffSyncConfigurer> diffSyncConfigurers = new ArrayList<>();
 
@@ -34,17 +39,24 @@ import java.util.UUID;
   @Bean
   @ConditionalOnMissingBean(PersistenceCallbackRegistry.class)
   public PersistenceCallbackRegistry persistenceCallbackRegistry() {
-    PersistenceCallbackRegistry registry = new PersistenceCallbackRegistry();
-    for (DiffSyncConfigurer diffSyncConfigurer : diffSyncConfigurers) {
-      diffSyncConfigurer.addPersistenceCallbacks(registry);
-    }
-    return registry;
+    final PersistenceCallbackRegistry persistenceCallbackRegistry = new PersistenceCallbackRegistry();
+    diffSyncConfigurers.forEach(
+        diffSyncConfigurer -> diffSyncConfigurer.addPersistenceCallbacks(persistenceCallbackRegistry));
+    return persistenceCallbackRegistry;
   }
 
   @Bean
   @ConditionalOnMissingBean(ShadowStore.class)
-  public ShadowStore shadowStore() {
-    return new MapBasedShadowStore(UUID.randomUUID().toString());
+  @ConditionalOnBean(RedisTemplate.class)
+  public ShadowStoreFactory redisShadowStore() {
+    return new ShadowStoreFactory(RedisShadowStore.class);
+  }
+
+  @Bean
+  @ConditionalOnMissingBean(ShadowStore.class)
+  @ConditionalOnBean(MapBasedShadowStore.class)
+  public ShadowStoreFactory mapBasedShadowStore() {
+    return new ShadowStoreFactory(MapBasedShadowStore.class);
   }
 
   @Bean
@@ -54,8 +66,8 @@ import java.util.UUID;
   }
 
   @Bean
-  public IDiffSyncService diffSyncService(ShadowStore shadowStore, Equivalency equivalency,
+  public IDiffSyncService diffSyncService(ShadowStoreFactory shadowStoreFactory, Equivalency equivalency,
       PersistenceCallbackRegistry persistenceCallbackRegistry) {
-    return new DiffSyncService(shadowStore, equivalency, persistenceCallbackRegistry);
+    return new DiffSyncService(shadowStoreFactory, equivalency, persistenceCallbackRegistry);
   }
 }

@@ -62,7 +62,7 @@ public class Todo implements Serializable {
   public Todo() {
   }
 
-  public Todo(Long id, String description, boolean complete) {
+  public Todo(Long id, String description, Boolean complete) {
     this.id = id;
     this.description = description;
     this.complete = complete;

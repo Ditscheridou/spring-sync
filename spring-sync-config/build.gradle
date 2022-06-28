@@ -1,15 +1,16 @@
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
 plugins {
-  id 'org.springframework.boot' version '2.7.0' apply false
-  id 'io.spring.dependency-management' version '1.0.11.RELEASE'
   id 'java'
-  id 'idea'
-  id "io.freefair.lombok" version "6.5.0.2"
-  id 'org.asciidoctor.jvm.convert' version '3.1.0'
+  id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 }
 
-description("Spring Sync Configuration")
+group 'org.springframework'
+version '0.0.1-SNAPSHOT'
+
+repositories {
+  mavenCentral()
+}
 
 dependencyManagement {
   imports {
@@ -18,14 +19,15 @@ dependencyManagement {
 }
 
 
-repositories {
-  mavenCentral()
-  google()
-}
-
 dependencies {
   implementation(project(":spring-sync-core"))
   implementation("org.springframework:spring-core")
   implementation("org.springframework:spring-context")
-  implementation("org.springframework.boot:spring-boot-autoconfigure")
+  implementation(project(":spring-sync-core:shadowstores"))
+  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+}
+
+test {
+  useJUnitPlatform()
 }

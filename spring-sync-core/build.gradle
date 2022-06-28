@@ -1,15 +1,18 @@
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
 plugins {
-  id 'org.springframework.boot' version '2.7.0' apply false
   id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-  id 'java'
+  id 'java-library'
+  id 'maven-publish'
   id 'idea'
   id "io.freefair.lombok" version "6.5.0.2"
   id 'org.asciidoctor.jvm.convert' version '3.1.0'
 }
 
 description("Spring Differential Synchronization and JSON Patch")
+
+group = 'org.springframework'
+version = '0.0.1-SNAPSHOT'
 
 dependencyManagement {
   imports {
@@ -24,17 +27,16 @@ repositories {
 }
 
 dependencies {
+  implementation(project(':spring-sync-core:shadowstores'))
   implementation("org.springframework:spring-core")
   implementation("org.springframework:spring-expression")
   implementation 'org.apache.commons:commons-lang3:3.12.0'
   implementation("com.googlecode.java-diff-utils:diffutils:1.2.1")
   implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
   implementation 'org.springframework:spring-beans'
-
-
   implementation("org.slf4j:slf4j-api")
-  implementation("org.springframework.data:spring-data-redis")
 
+  testImplementation(project(":spring-sync-core:map-shadowstore"))
   testImplementation("com.jayway.jsonpath:json-path")
   testImplementation("com.jayway.jsonpath:json-path-assert")
   testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'

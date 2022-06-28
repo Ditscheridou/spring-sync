@@ -1,19 +1,21 @@
 package org.springframework.sync;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.shadowstore.ShadowStore;
+import org.springframework.shadowstore.ShadowStoreFactory;
 import org.springframework.sync.diffsync.DiffSync;
 import org.springframework.sync.diffsync.Equivalency;
 import org.springframework.sync.diffsync.PersistenceCallback;
 import org.springframework.sync.diffsync.PersistenceCallbackRegistry;
-import org.springframework.sync.diffsync.shadowstore.ShadowStore;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
 public class DiffSyncService implements IDiffSyncService {
 
-  private final ShadowStore shadowStore;
+  private final ShadowStoreFactory shadowStoreFactory;
 
   private final Equivalency equivalency;
 
@@ -23,18 +25,24 @@ public class DiffSyncService implements IDiffSyncService {
   public Patch patch(final String resource, final String resourceId, final String shadowStoreId, final Patch patch) {
     PersistenceCallback<?> persistenceCallback = callbackRegistry.findPersistenceCallback(resource);
     Object findOne = persistenceCallback.findOne(resourceId);
-    return applyAndDiff(patch, findOne, persistenceCallback);
+    return applyAndDiff(patch, findOne, persistenceCallback, shadowStoreId);
   }
 
   @SuppressWarnings("unchecked")
-  private <T> Patch applyAndDiff(Patch patch, Object target, PersistenceCallback<T> persistenceCallback) {
+  private <T> Patch applyAndDiff(Patch patch, Object target, PersistenceCallback<T> persistenceCallback,
+      final String shadowStoreId) {
+    final ShadowStore shadowStore = getShadowStore(shadowStoreId);
+
     DiffSync<T> sync = new DiffSync<>(shadowStore, persistenceCallback.getEntityType());
     T patched = sync.apply((T) target, patch);
     persistenceCallback.persistChange(patched);
     return sync.diff(patched);
   }
 
-  private <T> Patch applyAndDiffAgainstList(Patch patch, List<T> target, PersistenceCallback<T> persistenceCallback) {
+  private <T> Patch applyAndDiffAgainstList(Patch patch, List<T> target, PersistenceCallback<T> persistenceCallback,
+      final String shadowStoreId) {
+    final ShadowStore shadowStore = getShadowStore(shadowStoreId);
+
     DiffSync<T> sync = new DiffSync<>(shadowStore, persistenceCallback.getEntityType());
 
     List<T> patched = sync.apply(target, patch);
@@ -60,9 +68,19 @@ public class DiffSyncService implements IDiffSyncService {
     return sync.diff(patched);
   }
 
+  private ShadowStore getShadowStore(final String shadowStoreId) {
+    final ShadowStore shadowStore;
+    try {
+      shadowStore = shadowStoreFactory.getShadowStore(shadowStoreId);
+    } catch (InvocationTargetException | IllegalAccessException | InstantiationException | NoSuchMethodException e) {
+      throw new PatchException("Could not instantiate a shadow store!");
+    }
+    return shadowStore;
+  }
+
   @Override
-  public Patch patch(final String resource, final Patch patch) {
+  public Patch patch(final String resource, final Patch patch, final String shadowStoreId) {
     PersistenceCallback<?> persistenceCallback = callbackRegistry.findPersistenceCallback(resource);
-    return applyAndDiffAgainstList(patch, (List) persistenceCallback.findAll(), persistenceCallback);
+    return applyAndDiffAgainstList(patch, (List) persistenceCallback.findAll(), persistenceCallback, shadowStoreId);
   }
 }

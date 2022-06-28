@@ -46,8 +46,9 @@ public class DiffSyncController {
   @Transactional
   @SuppressWarnings({ "unchecked", "rawtypes" })
   @PatchMapping(value = "${spring.diffsync.path:}/{resource}")
-  public Patch patch(@PathVariable("resource") String resource, @RequestBody Patch patch) throws PatchException {
-    return diffSyncService.patch(resource, patch);
+  public Patch patch(@PathVariable("resource") String resource, @RequestBody Patch patch, HttpSession session)
+      throws PatchException {
+    return diffSyncService.patch(resource, patch, session.getId());
   }
 
   @Transactional

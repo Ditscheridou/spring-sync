@@ -20,9 +20,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.shadowstore.MapBasedShadowStore;
 import org.springframework.sync.diffsync.DiffSync;
 import org.springframework.sync.diffsync.VersionedPatch;
-import org.springframework.sync.diffsync.shadowstore.MapBasedShadowStore;
 import org.springframework.sync.json.JsonPatchPatchConverter;
 import org.springframework.sync.operations.AddOperation;
 import org.springframework.sync.operations.MoveOperation;
@@ -381,10 +381,10 @@ class DiffSyncTest {
     List<Todo> todos = getTodoList();
     List<Todo> patched = sync.apply(todos, versionedPatch);
     VersionedPatch diff = sync.diff(patched);
-    assertEquals(1,
-        diff.getClientVersion()); // the server is acknowledge client version 1 (the client should be at that version by this time)
-    assertEquals(0,
-        diff.getServerVersion()); // the server created the patch against server version 0 (but it will be 1 after the patch is created)
+    // the server is acknowledge client version 1 (the client should be at that version by this time)
+    assertEquals(1, diff.getClientVersion());
+    // the server created the patch against server version 0 (but it will be 1 after the patch is created)
+    assertEquals(0, diff.getServerVersion());
 
     // original should remain unchanged
     assertEquals(todos, getTodoList());

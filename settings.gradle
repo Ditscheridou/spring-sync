@@ -5,6 +5,14 @@ def docs = findProject(':docs')
 docs.buildFileName = 'docs.gradle'
 
 include "spring-sync-core"
-include "spring-sync-config"
+include "spring-sync-spring-boot-starter"
 include "spring-sync-core-android"
 include "spring-sync-web"
+include 'spring-sync-core:shadowstores'
+findProject(':spring-sync-core:shadowstores')?.name = 'shadowstores'
+include 'spring-sync-core:redis-shadowstore'
+findProject(':spring-sync-core:redis-shadowstore')?.name = 'redis-shadowstore'
+include 'spring-sync-core:map-shadowstore'
+findProject(':spring-sync-core:map-shadowstore')?.name = 'map-shadowstore'
+include 'spring-sync-config'
+

@@ -15,14 +15,14 @@
  */
 package org.springframework.sync.diffsync;
 
-import java.util.List;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.shadowstore.Shadow;
+import org.springframework.shadowstore.ShadowStore;
 import org.springframework.sync.Diff;
 import org.springframework.sync.Patch;
-import org.springframework.sync.diffsync.shadowstore.Shadow;
-import org.springframework.sync.diffsync.shadowstore.ShadowStore;
 import org.springframework.sync.util.DeepCloneUtils;
+
+import java.util.List;
 
 /**
  * <p>
