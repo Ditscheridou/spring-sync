@@ -24,6 +24,17 @@ repositories {
   google()
 }
 
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
+    }
+  }
+  repositories {
+    mavenLocal()
+  }
+}
+
 dependencies {
   implementation(project(":spring-sync-core"))
   implementation(project(":spring-sync-core:shadowstores"))

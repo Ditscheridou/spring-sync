@@ -38,9 +38,8 @@ public class DeepCloneUtils {
    * @param <T>      the object's type
    * @return the cloned object
    */
-  @SuppressWarnings("unchecked")
-  public static <T> T deepClone(T original) {
-    return (T) SerializationUtils.clone((Serializable) original);
+  public static <T extends Serializable> T deepClone(T original) {
+    return SerializationUtils.clone(original);
   }
 
   /**
@@ -50,11 +49,10 @@ public class DeepCloneUtils {
    * @param <T>      the list's generic type
    * @return the cloned list
    */
-  @SuppressWarnings("unchecked")
-  public static <T> List<T> deepClone(List<T> original) {
+  public static <T extends Serializable> List<T> deepClone(List<T> original) {
     List<T> copy = new ArrayList<>(original.size());
     for (T t : original) {
-      copy.add((T) SerializationUtils.clone((Serializable) t));
+      copy.add(SerializationUtils.clone(t));
     }
     return copy;
   }

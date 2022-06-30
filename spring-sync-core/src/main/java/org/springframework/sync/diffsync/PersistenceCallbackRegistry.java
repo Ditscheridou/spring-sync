@@ -15,6 +15,7 @@
  */
 package org.springframework.sync.diffsync;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,16 +29,17 @@ import org.springframework.sync.Patch;
  * @author Craig Walls
  */
 @NoArgsConstructor
-public class PersistenceCallbackRegistry {
+public class PersistenceCallbackRegistry implements IPersistenceCallbackRegistry {
 
-  private final Map<String, PersistenceCallback<?>> persistenceCallbacks = new HashMap<>();
+  private final Map<String, PersistenceCallback<? extends Serializable>> persistenceCallbacks = new HashMap<>();
 
   /**
    * Adds a {@link PersistenceCallback} to the registry with a key that is pluralized by the pluralize() method.
    *
    * @param persistenceCallback the {@link PersistenceCallback} to add to the registry.
    */
-  public void addPersistenceCallback(PersistenceCallback<?> persistenceCallback) {
+  @Override
+  public void addPersistenceCallback(PersistenceCallback<? extends Serializable> persistenceCallback) {
     Class<?> entityType = persistenceCallback.getEntityType();
     String key = pluralize(entityType.getSimpleName());
     persistenceCallbacks.put(key, persistenceCallback);
@@ -49,7 +51,8 @@ public class PersistenceCallbackRegistry {
    * @param key the key that the {@link PersistenceCallback} has been registered under.
    * @return the {@link PersistenceCallback}
    */
-  public PersistenceCallback<?> findPersistenceCallback(String key) {
+  @Override
+  public PersistenceCallback<? extends Serializable> findPersistenceCallback(String key) {
     return persistenceCallbacks.get(key);
   }
 

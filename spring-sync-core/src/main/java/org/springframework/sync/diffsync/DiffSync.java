@@ -22,6 +22,7 @@ import org.springframework.sync.Diff;
 import org.springframework.sync.Patch;
 import org.springframework.sync.util.DeepCloneUtils;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -58,7 +59,7 @@ import java.util.List;
  * @author Craig Walls
  */
 @RequiredArgsConstructor
-public class DiffSync<T> {
+public class DiffSync<T extends Serializable> {
 
   private final ShadowStore shadowStore;
 

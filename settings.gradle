@@ -15,4 +15,6 @@ findProject(':spring-sync-core:redis-shadowstore')?.name = 'redis-shadowstore'
 include 'spring-sync-core:map-shadowstore'
 findProject(':spring-sync-core:map-shadowstore')?.name = 'map-shadowstore'
 include 'spring-sync-config'
+include 'spring-sync-data-jpa'
+include 'demo-application'
 

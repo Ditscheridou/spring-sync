@@ -20,6 +20,17 @@ dependencyManagement {
   }
 }
 
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
+    }
+  }
+  repositories {
+    mavenLocal()
+  }
+}
+
 
 repositories {
   mavenCentral()
@@ -31,11 +42,12 @@ dependencies {
 //  api('org.springframework:spring-sync-core:0.0.1-SNAPSHOT')
 //  api('org.springframework:shadowstores:0.0.1-SNAPSHOT')
 //  api('org.springframework:spring-sync-config:0.0.1-SNAPSHOT')
-  implementation(project(":spring-sync-core"))
-  implementation(project(":spring-sync-config"))
-  implementation(project(":spring-sync-core:shadowstores"))
+  api(project(":spring-sync-core"))
+  api(project(":spring-sync-config"))
+  api(project(":spring-sync-core:shadowstores"))
   implementation(project(":spring-sync-core:map-shadowstore"))
-  implementation(project(":spring-sync-core:redis-shadowstore"))
+//  implementation(project(":spring-sync-core:redis-shadowstore"))
+  implementation(project(":spring-sync-data-jpa"))
   implementation("org.springframework.data:spring-data-redis")
   implementation("org.springframework:spring-core")
   implementation("org.springframework:spring-context")

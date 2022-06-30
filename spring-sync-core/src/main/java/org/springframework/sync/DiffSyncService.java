@@ -8,6 +8,7 @@ import org.springframework.sync.diffsync.Equivalency;
 import org.springframework.sync.diffsync.PersistenceCallback;
 import org.springframework.sync.diffsync.PersistenceCallbackRegistry;
 
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,13 +24,15 @@ public class DiffSyncService implements IDiffSyncService {
 
   @Override
   public Patch patch(final String resource, final String resourceId, final String shadowStoreId, final Patch patch) {
-    PersistenceCallback<?> persistenceCallback = callbackRegistry.findPersistenceCallback(resource);
+    PersistenceCallback<? extends Serializable> persistenceCallback = callbackRegistry.findPersistenceCallback(
+        resource);
     Object findOne = persistenceCallback.findOne(resourceId);
     return applyAndDiff(patch, findOne, persistenceCallback, shadowStoreId);
   }
 
   @SuppressWarnings("unchecked")
-  private <T> Patch applyAndDiff(Patch patch, Object target, PersistenceCallback<T> persistenceCallback,
+  private <T extends Serializable> Patch applyAndDiff(Patch patch, Object target,
+      PersistenceCallback<T> persistenceCallback,
       final String shadowStoreId) {
     final ShadowStore shadowStore = getShadowStore(shadowStoreId);
 
@@ -39,7 +42,8 @@ public class DiffSyncService implements IDiffSyncService {
     return sync.diff(patched);
   }
 
-  private <T> Patch applyAndDiffAgainstList(Patch patch, List<T> target, PersistenceCallback<T> persistenceCallback,
+  private <T extends Serializable> Patch applyAndDiffAgainstList(Patch patch, List<T> target,
+      PersistenceCallback<T> persistenceCallback,
       final String shadowStoreId) {
     final ShadowStore shadowStore = getShadowStore(shadowStoreId);
 
@@ -80,7 +84,8 @@ public class DiffSyncService implements IDiffSyncService {
 
   @Override
   public Patch patch(final String resource, final Patch patch, final String shadowStoreId) {
-    PersistenceCallback<?> persistenceCallback = callbackRegistry.findPersistenceCallback(resource);
+    PersistenceCallback<? extends Serializable> persistenceCallback = callbackRegistry.findPersistenceCallback(
+        resource);
     return applyAndDiffAgainstList(patch, (List) persistenceCallback.findAll(), persistenceCallback, shadowStoreId);
   }
 }
