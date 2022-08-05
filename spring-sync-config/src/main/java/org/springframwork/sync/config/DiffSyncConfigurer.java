@@ -16,8 +16,8 @@ import org.springframework.web.patch.diffsync.ShadowStore;
  */
 package org.springframwork.sync.config;
 
-import org.springframework.sync.diffsync.PersistenceCallback;
-import org.springframework.sync.diffsync.PersistenceCallbackRegistry;
+import de.sync.core.persistence.PersistenceCallback;
+import de.sync.core.persistence.PersistenceCallbackRegistry;
 
 /**
  * Configurer for DiffSync.

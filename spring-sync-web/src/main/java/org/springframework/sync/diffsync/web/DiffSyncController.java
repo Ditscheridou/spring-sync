@@ -15,13 +15,12 @@
  */
 package org.springframework.sync.diffsync.web;
 
+import de.sync.core.DiffSyncService;
+import de.sync.core.Patch;
+import de.sync.core.PatchException;
+import de.sync.core.diffsync.DiffSync;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.sync.Patch;
-import org.springframework.sync.PatchException;
-import org.springframework.sync.diffsync.DiffSync;
-import org.springframework.sync.DiffSyncService;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PatchMapping;

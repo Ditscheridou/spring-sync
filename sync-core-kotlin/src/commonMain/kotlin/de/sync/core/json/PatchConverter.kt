@@ -1,0 +1,47 @@
+/*
+ * Copyright 2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package de.sync.core.json
+
+import de.sync.core.Patch
+
+/**
+ *
+ * A strategy interface for producing [Patch] instances from a patch document representation (such as JSON Patch) and
+ * rendering a Patch to a patch document representation. This decouples the [Patch] class from any specific patch format
+ * or library that holds the representation.
+ *
+ *
+ * For example, if the [Patch] is to be represented as JSON Patch, the representation type could be [JsonNode] or
+ * some other JSON library's type that holds a JSON document.
+ *
+ * @author Craig Walls
+ * @param <T> A type holding a representation of the patch. For example, a JsonNode if working with JSON Patch.
+</T> */
+interface PatchConverter<T> {
+    /**
+     * Convert a patch document representation to a [Patch].
+     * @param patchRepresentation the representation of a patch.
+     * @return the [Patch] object that the document represents.
+     */
+    fun convert(patchRepresentation: T): Patch?
+
+    /**
+     * Convert a [Patch] to a representation object.
+     * @param patch the [Patch] to convert.
+     * @return the patch representation object.
+     */
+    fun convert(patch: Patch): T
+}

@@ -19,7 +19,7 @@ import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.sync.diffsync.PersistenceCallback;
+import org.springframework.sync.persistence.PersistenceCallback;
 
 @RequiredArgsConstructor
 class JpaPersistenceCallback<T> implements PersistenceCallback<T> {

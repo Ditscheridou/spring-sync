@@ -18,6 +18,9 @@ package org.springframework.shadowstore;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.jds.shadowstore.AbstractShadowStore;
+import de.jds.shadowstore.Shadow;
+import de.jds.shadowstore.ShadowStore;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;

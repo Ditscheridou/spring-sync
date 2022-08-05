@@ -42,7 +42,7 @@ dependencies {
 //  api('org.springframework:spring-sync-core:0.0.1-SNAPSHOT')
 //  api('org.springframework:shadowstores:0.0.1-SNAPSHOT')
 //  api('org.springframework:spring-sync-config:0.0.1-SNAPSHOT')
-  api(project(":spring-sync-core"))
+  api(project(":sync-core-kotlin"))
   api(project(":spring-sync-config"))
   api(project(":spring-sync-core:shadowstores"))
   implementation(project(":spring-sync-core:map-shadowstore"))

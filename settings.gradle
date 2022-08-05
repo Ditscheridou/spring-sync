@@ -17,4 +17,5 @@ findProject(':spring-sync-core:map-shadowstore')?.name = 'map-shadowstore'
 include 'spring-sync-config'
 include 'spring-sync-data-jpa'
 include 'demo-application'
+include 'sync-core-kotlin'
 

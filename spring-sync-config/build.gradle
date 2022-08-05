@@ -31,7 +31,7 @@ dependencyManagement {
 }
 
 dependencies {
-  implementation(project(":spring-sync-core"))
+  implementation(project(":sync-core-kotlin"))
   implementation("org.springframework:spring-core")
   implementation("org.springframework:spring-context")
   implementation(project(":spring-sync-core:shadowstores"))

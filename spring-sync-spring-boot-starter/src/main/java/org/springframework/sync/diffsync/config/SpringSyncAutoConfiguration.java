@@ -1,18 +1,18 @@
 package org.springframework.sync.diffsync.config;
 
+import de.jds.shadowstore.ShadowStore;
+import de.jds.shadowstore.JvmShadowStoreFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shadowstore.MapBasedShadowStore;
-import org.springframework.shadowstore.ShadowStore;
-import org.springframework.shadowstore.ShadowStoreFactory;
 import org.springframework.sync.DiffSyncService;
 import org.springframework.sync.IDiffSyncService;
 import org.springframework.sync.diffsync.DiffSync;
 import org.springframework.sync.diffsync.Equivalency;
 import org.springframework.sync.diffsync.IdPropertyEquivalency;
-import org.springframework.sync.diffsync.PersistenceCallbackRegistry;
+import org.springframework.sync.persistence.PersistenceCallbackRegistry;
 import org.springframwork.sync.config.DiffSyncConfigurer;
 
 import java.util.List;
@@ -32,8 +32,8 @@ public class SpringSyncAutoConfiguration {
 
   @Bean
   @ConditionalOnMissingBean(ShadowStore.class)
-  public ShadowStoreFactory mapBasedShadowStore() {
-    return new ShadowStoreFactory(MapBasedShadowStore.class);
+  public JvmShadowStoreFactory mapBasedShadowStore() {
+    return new JvmShadowStoreFactory(MapBasedShadowStore.class);
   }
 
   @Bean
@@ -43,7 +43,7 @@ public class SpringSyncAutoConfiguration {
   }
 
   @Bean
-  public IDiffSyncService diffSyncService(ShadowStoreFactory shadowStoreFactory, Equivalency equivalency,
+  public IDiffSyncService diffSyncService(JvmShadowStoreFactory shadowStoreFactory, Equivalency equivalency,
       PersistenceCallbackRegistry persistenceCallbackRegistry) {
     return new DiffSyncService(shadowStoreFactory, equivalency, persistenceCallbackRegistry);
   }
