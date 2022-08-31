@@ -1,6 +1,0 @@
-= Spring Sync Reference
-Craig Walls
-
-The Spring Sync project enables Spring applications to streamline communication between application nodes by applying patches to data resources.
-
-This manual will be completed in a future milestone or release candidate. In the meantime, please refer to https://spring.io/blog/2014/10/22/introducing-spring-sync for an introduction to Spring Sync.

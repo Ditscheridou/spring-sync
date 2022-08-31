@@ -15,6 +15,7 @@
  */
 package de.sync.core.diffsync
 
+import de.jds.diffi.DiffAware
 import de.jds.shadowstore.Shadow
 import de.jds.shadowstore.ShadowStore
 import de.sync.core.Diff
@@ -89,7 +90,7 @@ class DiffSync(private val shadowStore: ShadowStore, private val entityType: KCl
      * @return a patched copy of the target.
      */
     fun apply(patch: Patch, target: Serializable): Serializable {
-        if (patch.size() === 0) {
+        if (patch.size() == 0) {
             return target
         }
         var shadow: Shadow<T> = getShadow(target)
@@ -170,7 +171,7 @@ class DiffSync(private val shadowStore: ShadowStore, private val entityType: KCl
      * @param target The target object to produce a difference patch for.
      * @return a [VersionedPatch] describing the differences between the target and its shadow.
      */
-    fun diff(target: Serializable): VersionedPatch {
+    fun diff(target: DiffAware): VersionedPatch {
         var shadow: Shadow<Serializable> = getShadow(target)
         val diff: Patch = Diff.diff(shadow.resource, target)
         val vDiff: VersionedPatch = VersionedPatch(
@@ -207,8 +208,8 @@ class DiffSync(private val shadowStore: ShadowStore, private val entityType: KCl
     private fun shouldApplyPatch(patch: Patch, shadow: Shadow<*>): Boolean {
         if (patch !is VersionedPatch) return true
         val versionedPatch: VersionedPatch = patch
-        return (versionedPatch.serverVersion === shadow.serverVersion
-                && versionedPatch.clientVersion === shadow.clientVersion)
+        return (versionedPatch.serverVersion == shadow.serverVersion
+                && versionedPatch.clientVersion == shadow.clientVersion)
     }
 
     private fun getShadow(target: Serializable): Shadow<Serializable> {

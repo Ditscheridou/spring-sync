@@ -1,11 +1,9 @@
 plugins {
     kotlin("multiplatform")
-    kotlin("plugin.serialization") version "1.7.10"
-    kotlin("native.cocoapods")
 }
 
 group = "de.jds"
-version = "1.0-SNAPSHOT"
+version = "0.0.1-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -14,9 +12,6 @@ repositories {
 kotlin {
 
     jvm {
-        compilations.all {
-            kotlinOptions.jvmTarget = "11"
-        }
         withJava()
         testRuns["test"].executionTask.configure {
             useJUnitPlatform()
@@ -45,41 +40,25 @@ kotlin {
                 baseName = "library"
             }
         }
-        cocoapods {
-            summary = "Diff Librabry for ios"
-            homepage = "https://github.com/onmyway133/DeepDiff"
-            pod("DeepDiff")
-        }
     }
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(project(":spring-sync-core:shadowstores"))
-                implementation(project(":diffi"))
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0-RC")
+                implementation("com.benasher44:uuid:0.5.0")
             }
-
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
             }
         }
-        val jvmMain by getting {
-            dependencies {
-                implementation("org.apache.commons:commons-lang3:3.12.0")
-                implementation("com.googlecode.java-diff-utils:diffutils:1.2.1")
-            }
-        }
+        val jvmMain by getting
         val jvmTest by getting
         val jsMain by getting
         val jsTest by getting
         val nativeMain by getting
         val nativeTest by getting
-        val iosArm64Main by getting {
-            dependencies {
-            }
-        }
+        val iosArm64Main by getting
         val iosArm64Test by getting
     }
 }
